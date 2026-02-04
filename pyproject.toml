@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyteknic-mock"
+version = "0.0.0"
+authors = [
+    {name = "Auguste Lalande", email = "alal@therubic.com"},
+]
+description = "Mock pyteknic."
+
+[tool.setuptools]
+zip-safe = true
+include-package-data = false
+
+[tool.setuptools.packages.find]
+exclude = ["test"]
+namespaces = false
+
+[tool.ruff]
+line-length = 80
+indent-width = 4
+
+target-version = "py38"
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint]
+preview = true
+
+select = ["ALL"]
+ignore = [
+    # These will eventually be enabled
+    "T201",      # Use of print statements
+    "DOC",
+    "D",
+    # These will not
+    "CPY",
+    "EM",
+    "RSE102",    # Unnecessary parentheses on raised exceptions
+    "SIM105",    # Use contextlib.supress
+    "TID252",    # Prefer absolute imports
+    "TRY003",    # Avoid specifying long messages outside the exception class
+]
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "single"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
