@@ -22,6 +22,7 @@ from collections import defaultdict
 import threading
 import time
 from typing import TypeAlias
+from dataclasses import dataclass
 
 MapIntMotor: TypeAlias = dict[int, 'Motor']
 
@@ -71,7 +72,7 @@ class Motor:
 
     def home(self) -> None:
         self._homed = True
-        self._status.set('WasHomed', 1)
+        self._status.WasHomed = 1
 
     def is_ready(self) -> bool:
         return self._ready
@@ -94,8 +95,8 @@ class Motor:
 
             self._moving = True
             self._stop_requested = False
-            self._status.set('InMotion', 1)
-            self._status.set('MoveDone', 0)
+            self._status.InMotion = 1
+            self._status.MoveDone = 0
 
         def _run_motion() -> None:
             dt = 0.05  # 50 ms timestep
@@ -139,8 +140,8 @@ class Motor:
                 self._position = target_pos
                 self._velocity = 0
                 self._moving = False
-                self._status.set('InMotion', 0)
-                self._status.set('MoveDone', 1)
+                self._status.InMotion = 0
+                self._status.MoveDone = 1
 
         self._motion_thread = threading.Thread(target=_run_motion, daemon=True)
         self._thread_started = False
@@ -206,53 +207,44 @@ class Motor:
     def zero_position(self) -> None:
         self._position = 0
 
-
+@dataclass
 class MotorStatus:
-    def __init__(self) -> None:
-        self._flags: dict[str, int] = {}
-
-    def get(self, name: str) -> int:
-        return self._flags.get(name, 0)
-
-    def set(self, name: str, value: int) -> None:
-        self._flags[name] = value
-
-    AFromStart = property(lambda self: self._get('AFromStart'))
-    AbovePosn = property(lambda self: self._get('AbovePosn'))
-    AlertPresent = property(lambda self: self._get('AlertPresent'))
-    AtTargetVel = property(lambda self: self._get('AtTargetVel'))
-    BFromEnd = property(lambda self: self._get('BFromEnd'))
-    Disabled = property(lambda self: self._get('Disabled'))
-    Enabled = property(lambda self: self._get('Enabled'))
-    GoingDisabled = property(lambda self: self._get('GoingDisabled'))
-    Homing = property(lambda self: self._get('Homing'))
-    HwFailure = property(lambda self: self._get('HwFailure'))
-    InA = property(lambda self: self._get('InA'))
-    InB = property(lambda self: self._get('InB'))
-    InDisableStop = property(lambda self: self._get('InDisableStop'))
-    InHardStop = property(lambda self: self._get('InHardStop'))
-    InMotion = property(lambda self: self._get('InMotion'))
-    InNegLimit = property(lambda self: self._get('InNegLimit'))
-    InPosLimit = property(lambda self: self._get('InPosLimit'))
-    InvInA = property(lambda self: self._get('InvInA'))
-    InvInB = property(lambda self: self._get('InvInB'))
-    MotionBlocked = property(lambda self: self._get('MotionBlocked'))
-    MoveBufAvail = property(lambda self: self._get('MoveBufAvail'))
-    MoveCanceled = property(lambda self: self._get('MoveCanceled'))
-    MoveCmdComplete = property(lambda self: self._get('MoveCmdComplete'))
-    MoveCmdNeg = property(lambda self: self._get('MoveCmdNeg'))
-    MoveDone = property(lambda self: self._get('MoveDone'))
-    NotReady = property(lambda self: self._get('NotReady'))
-    OutOfRange = property(lambda self: self._get('OutOfRange'))
-    Ready = property(lambda self: self._get('Ready'))
-    ShutdownState = property(lambda self: self._get('ShutdownState'))
-    SoftwareInputs = property(lambda self: self._get('SoftwareInputs'))
-    StatusEvent = property(lambda self: self._get('StatusEvent'))
-    StepsActive = property(lambda self: self._get('StepsActive'))
-    TimerExpired = property(lambda self: self._get('TimerExpired'))
-    UserAlert = property(lambda self: self._get('UserAlert'))
-    VectorSearch = property(lambda self: self._get('VectorSearch'))
-    WasHomed = property(lambda self: self._get('WasHomed'))
+    AFromStart: int = 0
+    AbovePosn: int = 0
+    AlertPresent: int = 0
+    AtTargetVel: int = 0
+    BFromEnd: int = 0
+    Disabled: int = 0
+    Enabled: int = 0
+    GoingDisabled: int = 0
+    Homing: int = 0
+    HwFailure: int = 0
+    InA: int = 0
+    InB: int = 0
+    InDisableStop: int = 0
+    InHardStop: int = 0
+    InMotion: int = 0
+    InNegLimit: int = 0
+    InPosLimit: int = 0
+    InvInA: int = 0
+    InvInB: int = 0
+    MotionBlocked: int = 0
+    MoveBufAvail: int = 0
+    MoveCanceled: int = 0
+    MoveCmdComplete: int = 0
+    MoveCmdNeg: int = 0
+    MoveDone: int = 1
+    NotReady: int = 0
+    OutOfRange: int = 0
+    Ready: int = 1
+    ShutdownState: int = 0
+    SoftwareInputs: int = 0
+    StatusEvent: int = 0
+    StepsActive: int = 0
+    TimerExpired: int = 0
+    UserAlert: int = 0
+    VectorSearch: int = 0
+    WasHomed: int = 1
 
 
 class TimeoutException(Exception):  # noqa: N818
