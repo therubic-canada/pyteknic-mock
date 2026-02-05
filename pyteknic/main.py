@@ -99,7 +99,7 @@ class Motor:
             self._status.MoveDone = 0
 
         def _run_motion() -> None:
-            dt = 0.05  # 50 ms timestep
+            dt = 0.01  # 10 ms timestep
             direction = 1.0 if target_pos > start_pos else -1.0
 
             v = 0.0
