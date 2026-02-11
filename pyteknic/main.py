@@ -19,10 +19,10 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from dataclasses import dataclass
 import threading
 import time
 from typing import TypeAlias
-from dataclasses import dataclass
 
 MapIntMotor: TypeAlias = dict[int, 'Motor']
 
@@ -67,7 +67,7 @@ class Motor:
     def assign_trigger_group(self, group_number: int) -> None:
         self._trigger_group = group_number
 
-    def config(self, arg0: str) -> None:
+    def config(self) -> None:
         pass
 
     def home(self) -> None:
@@ -206,6 +206,7 @@ class Motor:
 
     def zero_position(self) -> None:
         self._position = 0
+
 
 @dataclass
 class MotorStatus:
